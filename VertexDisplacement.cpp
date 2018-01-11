@@ -169,8 +169,9 @@ void MyWindow::render()
     angle += 0.25f * deltaT;
     if (angle > TwoPI) angle -= TwoPI;
 
-    static float EvolvingVal = 0.0005f;
-    EvolvingVal += 0.1f;
+    static float EvolvingVal = 0.0f;
+
+    if (animate == true) EvolvingVal += 0.01f;
 
     glClearColor(0.5f,0.5f,0.5f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -198,6 +199,8 @@ void MyWindow::render()
         mProgram->setUniformValue("ModelViewMatrix", mv1);
         mProgram->setUniformValue("NormalMatrix", mv1.normalMatrix());
         mProgram->setUniformValue("MVP", ProjectionMatrix * mv1);
+
+        mProgram->setUniformValue("Time", EvolvingVal);
 
         glDrawElements(GL_TRIANGLES, 6 * mPlane->getnFaces(), GL_UNSIGNED_INT, ((GLubyte *)NULL + (0)));
 
@@ -276,7 +279,7 @@ void MyWindow::keyPressEvent(QKeyEvent *keyEvent)
             break;
         case Qt::Key_S:
             break;
-        case Qt::Key_D:
+        case Qt::Key_W:
             animate = !animate;
             break;
         case Qt::Key_A:
